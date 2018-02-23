@@ -4,6 +4,46 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+# Task 1
+# Vizualize data for preprocessing
+dataset = pd.read_csv('kaspi1.csv')
+aveCost = dataset.iloc[:,-2].values.astype(float)
+y = dataset.iloc[:, -1].values
+y = y / aveCost
+listOfFeatures = ['FUEL_TYPE', 'BODY_TYPE', 'TYPE_OF_DRIVE','INTERIOR_TYPE', 'TRANSM_TYPE', 'AUTO_CONDITION']
+
+for col in listOfFeatures:
+    for s in dataset[col].unique():
+        k = dataset.loc[dataset[col] == s].index.values
+        sns.distplot(y[list(k)], kde = False, label = s)
+        plt.legend()
+        plt.ylabel('Count')
+        plt.xlabel('Estimated_cost / Average_cost')
+        plt.title(col)
+    plt.show()
+    plt.close()
+
+year = dataset['YEAR'].values
+for i in range(year.size):
+    if year[i] < np.int64(5):
+        year[i] = 0
+    elif year[i] < np.int64(10):
+        year[i] = 1
+    elif year[i] < np.int64(15):
+        year[i] = 2
+    else: 
+        year[i] = 3
+
+for s in list(np.unique(year)):
+    sns.distplot(y[year == s], kde = False, label = s.astype(str))
+    plt.legend()
+    plt.ylabel('Count')
+    plt.xlabel('Estimated_cost / Average_cost')
+    plt.title('YEAR')
+
+
+# Task 2
+# Vizualize data for preprocessing
 data = pd.read_csv('kaspi2.csv').head(100)
 data = data.drop(['NUM','F120'], axis = 1)
 data = data.fillna(data.mean())
